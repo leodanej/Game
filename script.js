@@ -1,11 +1,12 @@
 window.addEventListener("load", function(){
-
+// se declaran las variables
     const canvas = document.getElementById("canvas-1");
     const ctx =  canvas.getContext("2d");
 
     canvas.width = 500;
     canvas.height = 500;
-
+//aqui se declara las variables tanto como para ponerlo en modo de prueba que se vean el recuadro
+// y para que pueda moverse tanto para arriba como para abajo
     class InputHandler{
         constructor(game){
             this.game = game;
@@ -15,7 +16,7 @@ window.addEventListener("load", function(){
                     this.game.keys.push(e.key);
                 } else if(e.key === ' '){
                     this.game.player.shootTop();
-                }else if(e.key === 'd'){
+                }else if(e.key === 'c'){ // ahora el modo prueba se hara con la c en vez de la d
                     this.game.debug = !this.game.debug;
                 }
                 console.log(this.game.keys);
@@ -30,7 +31,7 @@ window.addEventListener("load", function(){
 
         }
     }
-
+// aqui lo que se declaran son los valores de los proyectiles
     class Projectile{
         constructor(game, x, y){
             this.game = game;
@@ -41,22 +42,22 @@ window.addEventListener("load", function(){
             this.speed = 3;
             this.markedForDeletion = false;
         }
-
+// aqui se van actualizando lo que son los disparos a los enemigos
         update(){
             this.x += this.speed;
             if (this.x > this.game.width * 0.8) {
                 this.markedForDeletion = true;
             }
         }
-
+// aqui es el color del proyectil
         draw(context){
-            context.fillStyle = "yellow";
+            context.fillStyle = "black"; // ahora los disparos son de color negro
             context.fillRect(this.x, this.y, this.width, this.height);
         }
 
         
     }
-
+ // aqui se declaran las variables para el jugador
     class Player{
         constructor(game){
             this.game = game;
@@ -67,12 +68,12 @@ window.addEventListener("load", function(){
             this.frameX = 0;
             this.frameY = 0;
             this.speedY = 0.5;
-            this.maxSpeed = 1;
+            this.maxSpeed = 1.5; // se cambio la maxima velocidad del jugaor
             this.projectiles = [];
             this.image = document.getElementById('player');
             this.maxFrame= 37;
         }
-
+ // aqui se actualizan cuando sube o baja el jugador y los proyectiles que lance
         update(){
             this.y += this.speedY;
             if (this.game.keys.includes("ArrowUp")) {
@@ -96,7 +97,7 @@ window.addEventListener("load", function(){
             }
 
         }
-
+ // aqui lo que se hace es la imagen del jugador que en este caso es el caballo de mar
         draw(context){
             if(this.game.debug)context.strokeRect(this.x, this.y, this.width, this.height);
             context.drawImage(this.image,
@@ -111,7 +112,7 @@ window.addEventListener("load", function(){
             });
             
         }
-
+// esto es para los proyectiles
         shootTop(){
             if (this.game.ammo > 0) {
                 this.projectiles.push(new Projectile(this.game, this.x+80, this.y+30));
@@ -121,20 +122,20 @@ window.addEventListener("load", function(){
         }
 
     }
-
+ // las variables con el contructor del enemigo
     class Enemy{
         constructor(game){
             this.game = game;
             this.x = this.game.width;
             this.speedX = Math.random()*-1.5-0.5;
             this.markedForDeletion = false;
-            this.lives = 5;
+            this.lives = 3; // ahora las vidas de los enemigos seran de 3
             this.score = this.lives;
             this.frameX = 0;
             this.frameY = 0;
             this.maxFrame = 37;
         }
-
+        // aqui lo que son cuando eliminas un enemigo
         update(){
             this.x += this.speedX;
             if(this.x + this.width < 0){
@@ -146,7 +147,7 @@ window.addEventListener("load", function(){
                 this.frameX = 0;
             }
         }
-
+        // aqui se declara el context para que salga la imagen de los enemigos
         draw(context){
             if(this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
             context.drawImage(this.image, 
@@ -160,7 +161,7 @@ window.addEventListener("load", function(){
             context.fillText(this.lives, this.x, this.y);
         }
     }
-
+   // aqui un constructor para la aparicion de los enemigos
     class Angler1 extends Enemy {
         constructor(game){
             super(game);
@@ -172,7 +173,7 @@ window.addEventListener("load", function(){
 
         }
     }
-
+    // este es el fondo de lo que es el juego
     class Layer{
         constructor(game, image, speedModifier){
             this.game = game;
@@ -183,18 +184,18 @@ window.addEventListener("load", function(){
             this.x = 0;
             this.y = 0;
         }
-
+        //aqui se va actualizando conforme avanza el juego
         update(){
             if(this.x <= -this.width)this.x = 0;
             else this.x -= this.game.speed*this.speedModifier;
         }
-
+        //aqui se hacen aparecer las imagenes
         draw(context){
             context.drawImage(this.image, this.x, this.y);
             context.drawImage(this.image, this.x + this.width, this.y);
         }
     }
-
+    // aqui se declaran cuales son los objetos del html
     class BackGround{
         constructor(game){
             this.game = game;
@@ -203,32 +204,32 @@ window.addEventListener("load", function(){
             this.image3 = document.getElementById("layer3");
             this.image4 = document.getElementById("layer4");
             
-            this.layer1 = new Layer(this.game, this.image1, 0.2);
-            this.layer2 = new Layer(this.game, this.image2, 0.4);
-            this.layer3 = new Layer(this.game, this.image3, 1.2);
-            this.layer4 = new Layer(this.game, this.image4, 1.7);
+            this.layer1 = new Layer(this.game, this.image1, 0.8);// se cambio los valores del elemento de los enemigos
+            this.layer2 = new Layer(this.game, this.image2, 0.1);
+            this.layer3 = new Layer(this.game, this.image3, 1.5);
+            this.layer4 = new Layer(this.game, this.image4, 2);
 
             this.layers = [this.layer1, this.layer2, this.layer3];
         }
-
+        // se actualizan
         update(){
             this.layers.forEach(layer=>layer.update());
         }
-
+        // se manda 
         draw(context){
             this.layers.forEach(layer=>layer.draw(context));
         }
 
     }
-
+    // aqui se declara el contructor para la puntuacion
     class UI{
         constructor(game){
             this.game = game;
-            this.fontSize = 25;
+            this.fontSize = 20;// se hizo mas chico lo que es la letra
             this.fontFamily = "Helvetica";
             this.color = "white";
         }
-
+        // aqui se declaran para que vaya el la puntucion y el tiempo
         draw(context){
             context.save();
             context.fillStyle = this.color;
@@ -266,7 +267,7 @@ window.addEventListener("load", function(){
             context.restore();
         }
     }
-
+    // aqui se declaran todo en general los enemigos la puntuacion, etc.
     class Game{
         constructor(width, height){
             this.width = width;
@@ -276,7 +277,7 @@ window.addEventListener("load", function(){
             this.ui = new UI(this);
             this.backGround = new BackGround(this);
             this.keys = [];
-            this.ammo = 20;
+            this.ammo = 10;// ahora se empieza con 10 disparos
             this.ammoTimer = 0;
             this.ammoInterval = 500;
             this.maxAmmo = 50;
@@ -285,13 +286,13 @@ window.addEventListener("load", function(){
             this.enemiesInterval = 1000;
             this.gameOver = false;
             this.score = 0;
-            this.winningScore = 10;
+            this.winningScore = 21;// se agrego mas en los puntos oara ganar
             this.gameTime = 0;
-            this.timeLimit = 15000;
+            this.timeLimit = 30000;// se agrego mas tiempo parael juego
             this.speed = 1;
             this.debug = false;
         }
-
+ // aqui se va ctualizando el tiempo si es que perdio o gano
         update(deltaTime){
             if (!this.gameOver) this.gameTime += deltaTime;
             if (this.gameTime > this.timeLimit) this.gameOver = true;

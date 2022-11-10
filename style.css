@@ -1,9 +1,10 @@
+/*Aqui se define el recuadro del juego*/
 *{
 margin: 0%;
 padding: 0%;
 box-sizing: border-box;
 }
-
+/*Este es el recuadro del jugador*/
 #canvas-1 {
     border: 5px solid #333;
     background-color: #4d79bc;
@@ -14,7 +15,19 @@ box-sizing: border-box;
     max-width: 100%;
     max-height: 100%;
 }
-
+/*aqui se esconden las imagenes que se repitan para que no se llene la pantalla*/
 #layer1, #layer2, #layer3, #layer4, #player, #angler1, #angler2, #lucky{
     display: none;
+}
+
+/*Color de fondo (background)*/
+
+body{
+
+    margin: 0; /*margin 0 para que quede centrado*/
+    width: 100%; /*le indicamos que tome el 100% del espacio que encuentre*/
+    height: 100vh; /*le indicamos que tome todo el alto de la ventana del navegador*/
+    background: linear-gradient(to right, rgb(244, 2, 2) 0%, rgb(184, 5, 5) 50%, rgb(6, 126, 246) 50%, rgb(3, 162, 255) 100%);
+    /*Aqui se declaran lo que son los colores, que una mitad sera roja y la otra mitad azul*/
+
 }
